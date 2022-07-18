@@ -33,14 +33,14 @@
               {
                   get
                   {
-                      return StaticDB.GetDB("hqbuy_com");
+                      return StaticDB.GetDB("cms");
                   }
               }
               public static IFreeSql shop
               {
                   get
                   {
-                      return StaticDB.GetDB("hqbuy_cms");
+                      return StaticDB.GetDB("shop");
                   }
               }
           }
