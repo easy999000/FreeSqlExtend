@@ -36,7 +36,10 @@ namespace FreeSqlExtend
 
     }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class PageResult<T> : PageParam
     {
         /// <summary>
@@ -51,6 +54,10 @@ namespace FreeSqlExtend
             this.PageSize = param.PageSize;
         }
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T1"></typeparam>
     public class PageDTO<T1> : PageParam
     {
         public ISelect<T1> PageExpression { get; set; }
@@ -68,6 +75,11 @@ namespace FreeSqlExtend
             return res;
         }
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T1"></typeparam>
+    /// <typeparam name="T2"></typeparam>
     public class PageDTO<T1, T2> : PageParam where T2 : class
     {
 
@@ -86,6 +98,12 @@ namespace FreeSqlExtend
             return res;
         }
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T1"></typeparam>
+    /// <typeparam name="T2"></typeparam>
+    /// <typeparam name="T3"></typeparam>
     public class PageDTO<T1, T2, T3> : PageParam where T2 : class where T3 : class
     {
 
@@ -104,6 +122,13 @@ namespace FreeSqlExtend
             return res;
         }
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T1"></typeparam>
+    /// <typeparam name="T2"></typeparam>
+    /// <typeparam name="T3"></typeparam>
+    /// <typeparam name="T4"></typeparam>
     public class PageDTO<T1, T2, T3, T4> :
         PageParam where T2 : class where T3 : class where T4 : class
     {
@@ -123,6 +148,14 @@ namespace FreeSqlExtend
             return res;
         }
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T1"></typeparam>
+    /// <typeparam name="T2"></typeparam>
+    /// <typeparam name="T3"></typeparam>
+    /// <typeparam name="T4"></typeparam>
+    /// <typeparam name="T5"></typeparam>
     public class PageDTO<T1, T2, T3, T4, T5> :
         PageParam where T2 : class where T3 : class where T4 : class where T5 : class
     {
@@ -142,6 +175,15 @@ namespace FreeSqlExtend
             return res;
         }
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T1"></typeparam>
+    /// <typeparam name="T2"></typeparam>
+    /// <typeparam name="T3"></typeparam>
+    /// <typeparam name="T4"></typeparam>
+    /// <typeparam name="T5"></typeparam>
+    /// <typeparam name="T6"></typeparam>
     public class PageDTO<T1, T2, T3, T4, T5, T6> :
         PageParam where T2 : class where T3 : class
         where T4 : class where T5 : class where T6 : class
