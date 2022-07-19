@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Text;
 using static FreeSqlGlobalExtensions;
 
@@ -356,6 +357,33 @@ public  class FreeSqlHelperStatic
     public static IDelete<T1> Delete<T1>(object dywhere) where T1 : class
     {
         return StaticDB.Delete<T1>(dywhere);
+    }
+
+    #endregion
+
+    #region 仓储
+     
+    /// <summary>
+    /// 返回默认仓库类
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TKey"></typeparam>
+    /// <param name="filter">数据过滤 + 验证</param>
+    /// <returns></returns>
+    public static IBaseRepository<TEntity, TKey> GetRepository<TEntity, TKey>( Expression<Func<TEntity, bool>> filter = null) where TEntity : class
+    {
+        return new DefaultRepository<TEntity, TKey>(StaticDB, filter);
+    }
+     
+    /// <summary>
+    /// 返回默认仓库类，适用联合主键的仓储类
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <param name="filter">数据过滤 + 验证</param>
+    /// <returns></returns>
+    public static IBaseRepository<TEntity> GetRepository<TEntity>( Expression<Func<TEntity, bool>> filter = null) where TEntity : class
+    {
+        return new DefaultRepository<TEntity, int>(StaticDB, filter);
     }
 
     #endregion
