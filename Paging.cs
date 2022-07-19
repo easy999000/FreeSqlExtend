@@ -25,12 +25,12 @@ namespace FreeSqlExtend
         public long PageCount
         {
             get
-            {
+            { 
                 if (PageSize < 1)
                 {
                     return 0;
                 }
-                return Count / PageSize;
+                return Count / PageSize + (Count % PageSize > 0 ? 1 : 0);
             }
         }
 
