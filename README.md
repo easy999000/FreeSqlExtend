@@ -1,4 +1,5 @@
 # FreeSqlExtend
+<pre>
 1.appsettings.json 添加配置节点  
         "FreeSqlExtend": {
             "DBConnectionList": [
@@ -47,5 +48,5 @@
           
 4.配置完成,可以使用 SqlHelper或FreeSqlHelperStatic的静态方法,访问数据库了.
    
-          
+</pre>
           
