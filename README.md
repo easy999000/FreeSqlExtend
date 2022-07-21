@@ -48,7 +48,7 @@
           
 4.配置完成,可以使用 SqlHelper或FreeSqlHelperStatic的静态方法,访问数据库了.
 
-            var list = SqlHelper.Select<ElectronArticle>()
+            var list = SqlHelper.Select<<Article>>()
                   .WhereIf(!string.IsNullOrEmpty(title), w => w.Title.Contains(title)) 
                   .Take(20)
                   .OrderByDescending(o => o.ID)
