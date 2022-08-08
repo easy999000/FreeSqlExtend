@@ -47,10 +47,18 @@ namespace FreeSqlExtend
             {
                 if (_FreeSql == null)
                 {
-                    _FreeSql = new FreeSql.FreeSqlBuilder()
+                    var build = new FreeSql.FreeSqlBuilder()
                   .UseConnectionString(Conn.DbType, Conn.ConnectionStr)
-                  .UseSlave(Conn.SlaveConnectionStr)
-                  .Build();
+                  .UseSlave(Conn.SlaveConnectionStr);
+                    if (Conn.SlaveWeight != null
+                        && Conn.SlaveConnectionStr != null
+                        )
+                    {
+                        //&& Conn.SlaveConnectionStr.Length == Conn.SlaveWeight.Length
+                        //不做长度判断,如果长度不一致,报错好发现错误.
+                        build = build.UseSlaveWeight(Conn.SlaveWeight);
+                    }
+                    _FreeSql = build.Build();
 
                     ///耗时监控
                     _FreeSql.Aop.CommandAfter += Aop_CommandAfter;
@@ -68,7 +76,7 @@ namespace FreeSqlExtend
             if (e.ElapsedMilliseconds > 10000)
             {
                 ///耗时监控
-                
+
                 //   Debug.WriteLine("");
                 //   Debug.WriteLine("Aop_CommandAfter");
                 ////   Debug.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(sender));

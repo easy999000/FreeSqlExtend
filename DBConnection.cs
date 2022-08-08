@@ -30,6 +30,11 @@ namespace FreeSqlExtend
         public string[] SlaveConnectionStr { get; set; }
 
         /// <summary>
+        /// 从库权重,长度需要和SlaveConnectionStr保持一致
+        /// </summary>
+        public int[] SlaveWeight { get; set; }
+
+        /// <summary>
         /// 
         /// </summary>
         public FreeSql.DataType DbType { get; set; }
