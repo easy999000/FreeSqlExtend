@@ -27,7 +27,7 @@
           var serviceProvider = services.BuildServiceProvider();
           FreeSqlHelperStatic.InitStaticDB(new SettingHelper(serviceProvider.GetService<IConfiguration>())); 
 
-3.如果是多数据库系统,可以定义一个之类,方便多库操作.提高效率,不定义不影响使用.
+3.如果是多数据库系统,可以定义一个子类,方便多库操作.提高开发效率,不定义不影响使用.
           public class SqlHelper : FreeSqlHelperStatic
           {
               public static IFreeSql cms
