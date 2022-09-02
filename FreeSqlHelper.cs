@@ -1,4 +1,5 @@
-﻿using FreeSql;
+﻿using CSScriptLib;
+using FreeSql;
 using FreeSql.Internal;
 using FreeSql.Internal.CommonProvider;
 using FreeSqlExtend;
@@ -104,6 +105,15 @@ public class FreeSqlHelper : BaseDbProvider, IFreeSql
         //注意： IFreeSql 在项目中应以单例声明，而不是在每次使用的时候创建。
     }
 
+    /// <summary>
+    /// 设置sql超时阈值
+    /// </summary>
+    /// <param name="MilliSecond"></param>
+    public void SetSqlWarningMilliseconds(uint MilliSecond)
+    {
+        this.DBDic.ForEach(item => item.Value.SqlWarningMilliseconds = MilliSecond);
+    }
+
     private void SqlBuilder_WriteMsg(MsgType arg1, string arg2)
     {
         if (this.WriteMsg != null)
@@ -164,7 +174,7 @@ public class FreeSqlHelper : BaseDbProvider, IFreeSql
 }
 
 
-public  class FreeSqlHelperStatic
+public class FreeSqlHelperStatic
 {
 
     static FreeSqlHelper _StaticDB;
@@ -204,6 +214,16 @@ public  class FreeSqlHelperStatic
         _StaticDB.InitDB(setting);
 
         //注意： IFreeSql 在项目中应以单例声明，而不是在每次使用的时候创建。
+    }
+
+
+    /// <summary>
+    /// 设置sql超时阈值
+    /// </summary>
+    /// <param name="MilliSecond"></param>
+    public void SetSqlWarningMillisecondsStatic(uint MilliSecond)
+    {
+        _StaticDB.SetSqlWarningMilliseconds(MilliSecond);
     }
 
     #region 查询
@@ -362,7 +382,7 @@ public  class FreeSqlHelperStatic
     #endregion
 
     #region 仓储
-     
+
     /// <summary>
     /// 返回默认仓库类
     /// </summary>
@@ -370,18 +390,18 @@ public  class FreeSqlHelperStatic
     /// <typeparam name="TKey"></typeparam>
     /// <param name="filter">数据过滤 + 验证</param>
     /// <returns></returns>
-    public static IBaseRepository<TEntity, TKey> GetRepository<TEntity, TKey>( Expression<Func<TEntity, bool>> filter = null) where TEntity : class
+    public static IBaseRepository<TEntity, TKey> GetRepository<TEntity, TKey>(Expression<Func<TEntity, bool>> filter = null) where TEntity : class
     {
         return new DefaultRepository<TEntity, TKey>(StaticDB, filter);
     }
-     
+
     /// <summary>
     /// 返回默认仓库类，适用联合主键的仓储类
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <param name="filter">数据过滤 + 验证</param>
     /// <returns></returns>
-    public static IBaseRepository<TEntity> GetRepository<TEntity>( Expression<Func<TEntity, bool>> filter = null) where TEntity : class
+    public static IBaseRepository<TEntity> GetRepository<TEntity>(Expression<Func<TEntity, bool>> filter = null) where TEntity : class
     {
         return new DefaultRepository<TEntity, int>(StaticDB, filter);
     }

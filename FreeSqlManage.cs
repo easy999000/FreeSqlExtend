@@ -19,6 +19,12 @@ namespace FreeSqlExtend
         private DBConnection _Conn;
 
         /// <summary>
+        /// sql耗时警告阈值 毫秒
+        /// </summary>
+        public uint SqlWarningMilliseconds { get; set; } = 1500;
+
+
+        /// <summary>
         /// 返回消息
         /// </summary>
         public event Action<MsgType, string> WriteMsg;
@@ -73,7 +79,7 @@ namespace FreeSqlExtend
 
         private void Aop_CommandAfter(object sender, FreeSql.Aop.CommandAfterEventArgs e)
         {
-            if (e.ElapsedMilliseconds > 10000)
+            if (e.ElapsedMilliseconds > SqlWarningMilliseconds)
             {
                 ///耗时监控
 
