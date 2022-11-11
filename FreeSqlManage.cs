@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeSql.Aop;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -71,10 +72,30 @@ namespace FreeSqlExtend
                     ///拦截空where update和delete
                     _FreeSql.Aop.CommandBefore += Aop_CommandBefore;
 
+                    _FreeSql.Aop.AuditValue += Aop_AuditValue;
+
                 }
 
                 return _FreeSql;
             }
+        }
+
+        private void Aop_AuditValue(object sender, FreeSql.Aop.AuditValueEventArgs e)
+        {
+            if ((e.AuditValueType == AuditValueType.InsertOrUpdate
+                ||e.AuditValueType== AuditValueType.Insert
+                ||e.AuditValueType== AuditValueType.Update)
+                && e.Column.CsType.FullName == "System.String")
+            {
+                if (e.Value.ToString().Length > e.Column.DbSize)
+                {
+                    e.Value = e.Value.ToString().Substring(0, e.Column.DbSize);
+                }
+            }
+
+
+
+
         }
 
         private void Aop_CommandAfter(object sender, FreeSql.Aop.CommandAfterEventArgs e)
@@ -99,6 +120,7 @@ namespace FreeSqlExtend
         }
         private void Aop_CommandBefore(object sender, FreeSql.Aop.CommandBeforeEventArgs e)
         {
+
 
             //Debug.WriteLine("");
             //Debug.WriteLine("Aop_CommandBefore");
