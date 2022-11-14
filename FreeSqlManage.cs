@@ -83,11 +83,11 @@ namespace FreeSqlExtend
         private void Aop_AuditValue(object sender, FreeSql.Aop.AuditValueEventArgs e)
         {
             if ((e.AuditValueType == AuditValueType.InsertOrUpdate
-                ||e.AuditValueType== AuditValueType.Insert
-                ||e.AuditValueType== AuditValueType.Update)
+                || e.AuditValueType == AuditValueType.Insert
+                || e.AuditValueType == AuditValueType.Update)
                 && e.Column.CsType.FullName == "System.String")
             {
-                if (e.Value.ToString().Length > e.Column.DbSize)
+                if (e.Column.DbSize > 0 && e.Value.ToString().Length > e.Column.DbSize)
                 {
                     e.Value = e.Value.ToString().Substring(0, e.Column.DbSize);
                 }
