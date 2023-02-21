@@ -23,6 +23,10 @@ namespace FreeSqlExtend
         /// sql耗时警告阈值 毫秒
         /// </summary>
         public uint SqlWarningMilliseconds { get; set; } = 1500;
+        ///// <summary>
+        ///// sql监控 查询过多条数
+        ///// </summary>
+        //public uint SqlWarningSelectCount { get; set; } = 2000;
 
 
         /// <summary>
@@ -87,7 +91,7 @@ namespace FreeSqlExtend
                 || e.AuditValueType == AuditValueType.Update)
                 && e.Column.CsType.FullName == "System.String")
             {
-                if (e.Column.DbSize > 0 && e.Value.ToString().Length > e.Column.DbSize)
+                if (e.Column.DbSize > 0 && e.Value != null && e.Value.ToString().Length > e.Column.DbSize)
                 {
                     e.Value = e.Value.ToString().Substring(0, e.Column.DbSize);
                 }
@@ -100,19 +104,14 @@ namespace FreeSqlExtend
 
         private void Aop_CommandAfter(object sender, FreeSql.Aop.CommandAfterEventArgs e)
         {
-            if (e.ElapsedMilliseconds > SqlWarningMilliseconds)
-            {
-                ///耗时监控
-
-                //   Debug.WriteLine("");
-                //   Debug.WriteLine("Aop_CommandAfter");
-                ////   Debug.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(sender));
-                //   Debug.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(e));
-                //   Debug.WriteLine("Aop_CommandAfter 222");
+            if (e.ElapsedMilliseconds > SqlWarningMilliseconds
+                )
+            { 
+                ///耗时监控 
                 if (WriteMsg != null)
                 {
-                    WriteMsg(MsgType.Error, e.Log);
-
+                    WriteMsg(MsgType.Error, e.Command.CommandText);
+                     
                 }
             }
 
