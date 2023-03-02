@@ -104,14 +104,23 @@ namespace FreeSqlExtend
 
         private void Aop_CommandAfter(object sender, FreeSql.Aop.CommandAfterEventArgs e)
         {
+            if (e.Exception != null)
+            {
+                if (WriteMsg != null)
+                {
+                    WriteMsg(MsgType.Error, $"sql异常.({e.Command.CommandText})");
+                    
+                }
+            }
+            
+
             if (e.ElapsedMilliseconds > SqlWarningMilliseconds
                 )
             { 
                 ///耗时监控 
                 if (WriteMsg != null)
                 {
-                    WriteMsg(MsgType.Error, e.Command.CommandText);
-                     
+                    WriteMsg(MsgType.Error,$"sql耗时:{e.ElapsedMilliseconds/1000}秒.({e.Command.CommandText})" );                     
                 }
             }
 
