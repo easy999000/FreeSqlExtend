@@ -1,11 +1,12 @@
 ﻿using FreeSql;
+using FreeSql.DataAnnotations;
 using FreeSql.Internal.Model;
 using FreeSqlExtend;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
-
+using System.Threading;
 
 public static class FreeSqlExtension
 {
@@ -264,5 +265,42 @@ public static class FreeSqlExtension
     #endregion
     #endregion
 
+
+    #region 字符串 大于,小于
+
+    static ThreadLocal<ExpressionCallContext> context = new ThreadLocal<ExpressionCallContext>();
+    /// <summary>
+    /// freesql字符串扩展方法,用在where条件表达式,
+    /// 其他情况不要用
+    /// 永远假值
+    /// </summary>
+    /// <param name="that"></param>
+    /// <param name="arg1"></param>
+    /// <returns></returns>
+    [ExpressionCall]
+    public static bool GreaterThan(this string that, string arg1)
+    {
+        var up = context.Value; 
+        up.Result = $"{up.ParsedContent["that"]}>{up.ParsedContent["arg1"]}";
+        return false;
+    }
+    /// <summary>
+    /// freesql字符串扩展方法,用在where条件表达式,
+    /// 其他情况不要用
+    /// 永远假值
+    /// </summary>
+    /// <param name="that"></param>
+    /// <param name="arg1"></param>
+    /// <returns></returns>
+    [ExpressionCall]
+    public static bool LessThan(this string that, string arg1)
+    {
+        var up = context.Value;
+
+        up.Result = $"{up.ParsedContent["that"]}<{up.ParsedContent["arg1"]}";
+        return false;
+    }
+
+    #endregion
 }
 
