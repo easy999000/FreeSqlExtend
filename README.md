@@ -25,7 +25,7 @@
 
           ////初始化数据库访问层
           var serviceProvider = services.BuildServiceProvider();
-          FreeSqlHelperStatic.InitStaticDB(new SettingHelper(serviceProvider.GetService<IConfiguration>())); 
+          FreeSqlHelperStatic.InitStaticDB(new SettingHelper(serviceProvider.GetService&lt;IConfiguration&gt;())); 
 
 3.如果是多数据库系统,可以定义一个子类,方便多库操作.提高开发效率,不定义不影响使用.
           public class SqlHelper : FreeSqlHelperStatic
