@@ -1,5 +1,7 @@
 ﻿using FreeSql;
 using FreeSql.DataAnnotations;
+using FreeSql.Internal;
+using FreeSql.Internal.CommonProvider;
 using FreeSql.Internal.Model;
 using FreeSqlExtend;
 using System;
@@ -265,6 +267,81 @@ public static class FreeSqlExtension
     #endregion
     #endregion
 
+    #region Update扩展
+    /// <summary>
+    /// 扩展dto更新方法, dto属性值null的不更新
+    /// </summary>
+    /// <typeparam name="T1"></typeparam>
+    /// <param name="Source"></param>
+    /// <param name="dto"></param>
+    /// <returns></returns>
+    public static IUpdate<T1> SetDto_NoNull<T1>(this IUpdate<T1> Source, object dto)
+    {
+        var source2 = Source as UpdateProvider<T1>;
+
+        if (source2 == null)
+        {
+            return Source;
+        }
+
+
+        if (dto == null) return Source;
+        if (dto is Dictionary<string, object>)
+        {
+            var dic = dto as Dictionary<string, object>;
+            foreach (var kv in dic)
+            {
+                if (kv.Value == null)
+                {
+                    continue;
+                }
+                if (source2._table.ColumnsByCs.TryGetValue(kv.Key, out var trycol) == false) continue;
+                if (source2._ignore.ContainsKey(trycol.Attribute.Name)) continue;
+                SetPriv(source2, trycol, kv.Value);
+            }
+            return Source;
+        }
+        var dtoProps = dto.GetType().GetProperties();
+        foreach (var dtoProp in dtoProps)
+        {
+            if (dtoProp.GetValue(dto, null) == null)
+            {
+                continue;
+            }
+            if (source2._table.ColumnsByCs.TryGetValue(dtoProp.Name, out var trycol) == false) continue;
+            if (source2._ignore.ContainsKey(trycol.Attribute.Name)) continue;
+            SetPriv(source2, trycol, dtoProp.GetValue(dto, null));
+        }
+        return Source;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T1"></typeparam>
+    /// <param name="Source2"></param>
+    /// <param name="col"></param>
+    /// <param name="value"></param>
+
+    static void SetPriv<T1>(UpdateProvider<T1> Source2, ColumnInfo col, object value)
+    {
+        object val = null;
+        if (col.Attribute.MapType == col.CsType) val = value;
+        else val = Utils.GetDataReaderValue(col.Attribute.MapType, value);
+        Source2._set.Append(", ").Append(Source2._commonUtils.QuoteSqlName(col.Attribute.Name)).Append(" = ");
+
+        var colsql = Source2._noneParameter ? Source2._commonUtils.GetNoneParamaterSqlValue(Source2._params, "u", col, col.Attribute.MapType, val) :
+            Source2._commonUtils.QuoteWriteParamterAdapter(col.Attribute.MapType, Source2._commonUtils.QuoteParamterName($"p_{Source2._params.Count}"));
+        Source2._set.Append(Source2._commonUtils.RewriteColumn(col, colsql));
+        if (Source2._noneParameter == false)
+            Source2._commonUtils.AppendParamter(Source2._params, null, col, col.Attribute.MapType, val);
+    }
+
+
+
+
+
+    #endregion
 
     #region 字符串 大于,小于
 
