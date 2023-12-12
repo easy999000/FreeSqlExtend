@@ -275,7 +275,7 @@ public static class FreeSqlExtension
     /// <param name="Source"></param>
     /// <param name="dto"></param>
     /// <returns></returns>
-    public static IUpdate<T1> SetDto_NoNull<T1>(this IUpdate<T1> Source, object dto)
+    public static IUpdate<T1> SetDtoIgnoreNull<T1>(this IUpdate<T1> Source, object dto)
     {
         var source2 = Source as UpdateProvider<T1>;
 
