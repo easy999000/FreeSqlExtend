@@ -2,6 +2,7 @@
 using FreeSql.Internal.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace FreeSqlExtend
@@ -74,6 +75,19 @@ namespace FreeSqlExtend
 
             return res;
         }
+        public PageResult<DTO> ToPage<DTO>(Expression<Func<T1, DTO>> select)
+        {
+            PageResult<DTO> res = new PageResult<DTO>();
+            res.FromParam(this);
+            res.Data = PageExpression.ToList<DTO>(select);
+            if (this.Count < 1)
+            {
+                res.Count = PageExpression.Count();
+            }
+
+            return res;
+        }
+         
     }
     /// <summary>
     /// 
