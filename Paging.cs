@@ -111,6 +111,18 @@ namespace FreeSqlExtend
 
             return res;
         }
+        public PageResult<DTO> ToPage<DTO>(Expression<Func<HzyTuple<T1, T2>, DTO>> select)
+        {
+            PageResult<DTO> res = new PageResult<DTO>();
+            res.FromParam(this);
+            res.Data = PageExpression.ToList<DTO>(select);
+            if (this.Count < 1)
+            {
+                res.Count = PageExpression.Count();
+            }
+
+            return res;
+        }
     }
     /// <summary>
     /// 
@@ -128,6 +140,18 @@ namespace FreeSqlExtend
             PageResult<DTO> res = new PageResult<DTO>();
             res.FromParam(this);
             res.Data = PageExpression.ToList<DTO>();
+            if (this.Count < 1)
+            {
+                res.Count = PageExpression.Count();
+            }
+
+            return res;
+        }
+        public PageResult<DTO> ToPage<DTO>(Expression<Func<HzyTuple<T1, T2, T3>, DTO>> select)
+        {
+            PageResult<DTO> res = new PageResult<DTO>();
+            res.FromParam(this);
+            res.Data = PageExpression.ToList<DTO>(select);
             if (this.Count < 1)
             {
                 res.Count = PageExpression.Count();
@@ -154,6 +178,18 @@ namespace FreeSqlExtend
             PageResult<DTO> res = new PageResult<DTO>();
             res.FromParam(this);
             res.Data = PageExpression.ToList<DTO>();
+            if (this.Count < 1)
+            {
+                res.Count = PageExpression.Count();
+            }
+
+            return res;
+        }
+        public PageResult<DTO> ToPage<DTO>(Expression<Func<HzyTuple<T1, T2, T3, T4>, DTO>> select)
+        {
+            PageResult<DTO> res = new PageResult<DTO>();
+            res.FromParam(this);
+            res.Data = PageExpression.ToList<DTO>(select);
             if (this.Count < 1)
             {
                 res.Count = PageExpression.Count();
@@ -188,6 +224,18 @@ namespace FreeSqlExtend
 
             return res;
         }
+        public PageResult<DTO> ToPage<DTO>(Expression<Func<HzyTuple<T1, T2, T3, T4, T5>, DTO>> select)
+        {
+            PageResult<DTO> res = new PageResult<DTO>();
+            res.FromParam(this);
+            res.Data = PageExpression.ToList<DTO>(select);
+            if (this.Count < 1)
+            {
+                res.Count = PageExpression.Count();
+            }
+
+            return res;
+        }
     }
     /// <summary>
     /// 
@@ -210,6 +258,18 @@ namespace FreeSqlExtend
             PageResult<DTO> res = new PageResult<DTO>();
             res.FromParam(this);
             res.Data = PageExpression.ToList<DTO>();
+            if (this.Count < 1)
+            {
+                res.Count = PageExpression.Count();
+            }
+
+            return res;
+        }
+        public PageResult<DTO> ToPage<DTO>(Expression<Func<HzyTuple<T1, T2, T3, T4, T5, T6>, DTO>> select)
+        {
+            PageResult<DTO> res = new PageResult<DTO>();
+            res.FromParam(this);
+            res.Data = PageExpression.ToList<DTO>(select);
             if (this.Count < 1)
             {
                 res.Count = PageExpression.Count();
