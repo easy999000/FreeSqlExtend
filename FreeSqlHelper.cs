@@ -1,4 +1,4 @@
-﻿using CSScriptLib;
+﻿ 
 using FreeSql;
 using FreeSql.Internal;
 using FreeSql.Internal.CommonProvider;
@@ -111,7 +111,10 @@ public class FreeSqlHelper : BaseDbProvider, IFreeSql
     /// <param name="MilliSecond"></param>
     public void SetSqlWarningMilliseconds(uint MilliSecond)
     {
-        this.DBDic.ForEach(item => item.Value.SqlWarningMilliseconds = MilliSecond);
+        foreach (var item in this.DBDic)
+        {
+            item.Value.SqlWarningMilliseconds = MilliSecond;
+        } 
     }
 
     private void SqlBuilder_WriteMsg(MsgType arg1, string arg2)
@@ -126,9 +129,9 @@ public class FreeSqlHelper : BaseDbProvider, IFreeSql
     #region iFreeSql接口实现
 
     BaseDbProvider _DefaultDBBasePro => DefaultDB as BaseDbProvider;
-    public override IAdo Ado => _DefaultDBBasePro.Ado;
-    public override IAop Aop => _DefaultDBBasePro.Aop;
-    public override ICodeFirst CodeFirst => _DefaultDBBasePro.CodeFirst;
+    public override IAdo Ado => DefaultDB.Ado;
+    public override IAop Aop => DefaultDB.Aop;
+    public override ICodeFirst CodeFirst => DefaultDB.CodeFirst;
     public override IDbFirst DbFirst => _DefaultDBBasePro.DbFirst;
     public override GlobalFilter GlobalFilter => _DefaultDBBasePro.GlobalFilter;
     public override CommonExpression InternalCommonExpression => _DefaultDBBasePro.InternalCommonExpression;
@@ -146,7 +149,7 @@ public class FreeSqlHelper : BaseDbProvider, IFreeSql
     }
 
     public override IUpdate<T1> CreateUpdateProvider<T1>(object dywhere)
-    {
+    { 
         return _DefaultDBBasePro.CreateUpdateProvider<T1>(dywhere);
     }
 
@@ -392,7 +395,8 @@ public class FreeSqlHelperStatic
     /// <returns></returns>
     public static IBaseRepository<TEntity, TKey> GetRepository<TEntity, TKey>(Expression<Func<TEntity, bool>> filter = null) where TEntity : class
     {
-        return new DefaultRepository<TEntity, TKey>(StaticDB, filter);
+        return _StaticDB.GetRepository<TEntity, TKey>(filter);
+        //return new DefaultRepository<TEntity, TKey>(StaticDB, filter);
     }
 
     /// <summary>
@@ -403,7 +407,8 @@ public class FreeSqlHelperStatic
     /// <returns></returns>
     public static IBaseRepository<TEntity> GetRepository<TEntity>(Expression<Func<TEntity, bool>> filter = null) where TEntity : class
     {
-        return new DefaultRepository<TEntity, int>(StaticDB, filter);
+        return _StaticDB.GetRepository<TEntity>(filter);
+        
     }
 
     #endregion

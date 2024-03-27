@@ -6,9 +6,12 @@ using FreeSql.Internal.Model;
 using FreeSqlExtend;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
+using System.Xml.Linq;
+using static FreeSql.Internal.GlobalFilter;
 
 public static class FreeSqlExtension
 {
@@ -337,7 +340,51 @@ public static class FreeSqlExtension
             Source2._commonUtils.AppendParamter(Source2._params, null, col, col.Attribute.MapType, val);
     }
 
+    /// <summary>
+    /// 自动匹配新旧数据,执行插入,更新,删除
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TKey"></typeparam>
+    /// <param name="Repo"></param>
+    /// <param name="UpdateData"></param>
+    /// <param name="OldData"></param>
+    /// <param name="KeySelect"></param>
+    public static void UpdateFull<TEntity, TKey>(this IBaseRepository<TEntity> Repo
+        , List<TEntity> UpdateData
+        , List<TEntity> OldData
+        , Func<TEntity, TKey> KeySelect) where TEntity : class
+    {
+        var updateList = new List<TEntity>();
+        var insertList = new List<TEntity>();
+        var delList = new List<TEntity>();
 
+        foreach (var item in UpdateData)
+        {
+            var ID = KeySelect(item);
+            if (ID.Equals(default(TKey)))
+            {
+                insertList.Add(item);
+            }
+            else
+            {
+                updateList.Add(item);
+            }
+        }
+
+        foreach (var item2 in OldData)
+        {
+            var ID2 = KeySelect(item2);
+
+            if (!UpdateData.Any(f => ID2.Equals(KeySelect(f))))
+            {
+                delList.Add(item2);
+            }
+
+        }
+        Repo.Insert(insertList);
+        Repo.Update(updateList);
+        Repo.Delete(delList);
+    }
 
 
 
@@ -357,7 +404,7 @@ public static class FreeSqlExtension
     [ExpressionCall]
     public static bool GreaterThan(this string that, string arg1)
     {
-        var up = context.Value; 
+        var up = context.Value;
         up.Result = $"{up.ParsedContent["that"]}>{up.ParsedContent["arg1"]}";
         return false;
     }

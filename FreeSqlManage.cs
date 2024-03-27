@@ -48,7 +48,7 @@ namespace FreeSqlExtend
                 }
             }
         }
-
+        private object freesqlCreateLock = new object();
         /// <summary>
         /// 主要数据库操作对象
         /// </summary>
@@ -58,26 +58,33 @@ namespace FreeSqlExtend
             {
                 if (_FreeSql == null)
                 {
-                    var build = new FreeSql.FreeSqlBuilder()
-                  .UseConnectionString(Conn.DbType, Conn.ConnectionStr)
-                  .UseSlave(Conn.SlaveConnectionStr);
-                    if (Conn.SlaveWeight != null
-                        && Conn.SlaveConnectionStr != null
-                        )
+                    lock (freesqlCreateLock)
                     {
-                        //&& Conn.SlaveConnectionStr.Length == Conn.SlaveWeight.Length
-                        //不做长度判断,如果长度不一致,报错好发现错误.
-                        build = build.UseSlaveWeight(Conn.SlaveWeight);
+                        if (_FreeSql == null)
+                        {
+                            var build = new FreeSql.FreeSqlBuilder()
+                              .UseConnectionString(Conn.DbType, Conn.ConnectionStr)
+                              .UseSlave(Conn.SlaveConnectionStr);
+                           
+
+                            if (Conn.SlaveWeight != null
+                                && Conn.SlaveConnectionStr != null
+                                )
+                            {
+                                //&& Conn.SlaveConnectionStr.Length == Conn.SlaveWeight.Length
+                                //不做长度判断,如果长度不一致,报错好发现错误.
+                                build = build.UseSlaveWeight(Conn.SlaveWeight);
+                            }
+                            _FreeSql = build.Build();
+
+                            ///耗时监控
+                            _FreeSql.Aop.CommandAfter += Aop_CommandAfter;
+                            ///拦截空where update和delete
+                            _FreeSql.Aop.CommandBefore += Aop_CommandBefore;
+
+                            _FreeSql.Aop.AuditValue += Aop_AuditValue;
+                        }
                     }
-                    _FreeSql = build.Build();
-
-                    ///耗时监控
-                    _FreeSql.Aop.CommandAfter += Aop_CommandAfter;
-                    ///拦截空where update和delete
-                    _FreeSql.Aop.CommandBefore += Aop_CommandBefore;
-
-                    _FreeSql.Aop.AuditValue += Aop_AuditValue;
-
                 }
 
                 return _FreeSql;
@@ -109,18 +116,18 @@ namespace FreeSqlExtend
                 if (WriteMsg != null)
                 {
                     WriteMsg(MsgType.Error, $"sql异常.({e.Command.CommandText})");
-                    
+
                 }
             }
-            
+
 
             if (e.ElapsedMilliseconds > SqlWarningMilliseconds
                 )
-            { 
+            {
                 ///耗时监控 
                 if (WriteMsg != null)
                 {
-                    WriteMsg(MsgType.Error,$"sql耗时:{e.ElapsedMilliseconds/1000}秒.({e.Command.CommandText})" );                     
+                    WriteMsg(MsgType.Error, $"sql耗时:{e.ElapsedMilliseconds / 1000}秒.({e.Command.CommandText})");
                 }
             }
 
